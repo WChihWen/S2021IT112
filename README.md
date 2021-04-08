@@ -1,1 +1,1 @@
-# S2021IT112
+# Spring 2021 IT112 Django Project.
