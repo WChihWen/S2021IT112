@@ -2,14 +2,14 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from .models import Meeting, Minutes, Resource, Event
 import datetime
-from .forms import ResourceForm
+from .forms import ResourceForm, MeetingForm
 
 
 class MeetingTest(TestCase):
     def setUp(self):
         self.mtdate = datetime.date(2021,6,2)
         self.mttime = datetime.time(12, 30, 00, 240000)
-        self.myMeeting = Meeting(meetingtitle = 'Optional IT112 week 10', meetingdate  = self.mtdate, meetingtime = self.mttime, location ='Zoon', Agenda = 'Q&A')
+        self.myMeeting = Meeting(meetingtitle = 'Optional IT112 week 10', meetingdate  = self.mtdate, meetingtime = self.mttime, location ='Zoom', Agenda = 'Q&A')
         
     def test_string(self):
         self.assertEqual(str(self.myMeeting), 'Optional IT112 week 10')
@@ -88,4 +88,14 @@ class NewResourceForm(TestCase):
     #     form = ResourceForm(data)
     #     self.assertFalse(form.is_valid)
         
-        
+class NewMeetingForm(TestCase):
+    def test_ResourceForm(self):
+        data = {
+            'meetingtitle': 'Optional IT112 week 10', 
+            'meetingdate': datetime.date(2021,6,2), 
+            'meetingtime': datetime.time(12, 30, 00, 240000), 
+            'location': 'Zoom', 
+            'Agenda': 'Q&A'     
+        }
+        form = MeetingForm(data)
+        self.assertTrue(form.is_valid)
