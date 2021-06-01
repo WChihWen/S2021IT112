@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from .models import Meeting, Minutes, Resource, Event
 import datetime
+from .forms import ResourceForm
 
 
 class MeetingTest(TestCase):
@@ -16,7 +17,6 @@ class MeetingTest(TestCase):
     def test_table(self):
        self.assertEqual(str(Meeting._meta.db_table), 'meeting')
        
-
 class MinuteTest(TestCase):
     def setUp(self):
         self.mt = Meeting(meetingtitle = 'Optional IT112 week 10')
@@ -44,7 +44,6 @@ class ResourceTest(TestCase):
     def test_table(self):
        self.assertEqual(str(Resource._meta.db_table), 'resource')
 
-
 class EventTest(TestCase):
     def setUp(self):
         self.ettile = 'Taking COVID Vaccine (2nd)'
@@ -61,3 +60,32 @@ class EventTest(TestCase):
         
     def test_table(self):
        self.assertEqual(str(Event._meta.db_table), 'event')
+       
+    
+# form test
+class NewResourceForm(TestCase):
+    def test_ResourceForm(self):
+        data = {
+            'resourcename': 'Python Tutorial', 
+            'resourcetype': 'Tutorial', 
+            'resourceurl': 'https://www.w3schools.com/python/', 
+            'entereddate': datetime.date(2021,6,1), 
+            'user': 'yaman', 
+            'description': 'Python can be used on a server to create web applications.'           
+        }
+        form = ResourceForm(data)
+        self.assertTrue(form.is_valid)
+        
+    # def test_resurcename_empty(self):
+    #     data = {
+    #         'resourcename': '', 
+    #         'resourcetype': 'Tutorial', 
+    #         'resourceurl': 'https://www.w3schools.com/python/', 
+    #         'entereddate': datetime.date(2021,6,1), 
+    #         'user': 'yaman', 
+    #         'description': 'Python can be used on a server to create web applications.'           
+    #     }
+    #     form = ResourceForm(data)
+    #     self.assertFalse(form.is_valid)
+        
+        
