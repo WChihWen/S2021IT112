@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from .models import Meeting, Minutes, Resource, Event
 import datetime
 from .forms import ResourceForm, MeetingForm
-
+from django.urls import reverse
 
 class MeetingTest(TestCase):
     def setUp(self):
@@ -89,6 +89,7 @@ class NewResourceForm(TestCase):
     #     self.assertFalse(form.is_valid)
         
 class NewMeetingForm(TestCase):
+    
     def test_ResourceForm(self):
         data = {
             'meetingtitle': 'Optional IT112 week 10', 
@@ -99,3 +100,28 @@ class NewMeetingForm(TestCase):
         }
         form = MeetingForm(data)
         self.assertTrue(form.is_valid)
+        
+#form authentication test
+class New_Resource_Auth_Test(TestCase):
+    def setUp(self):
+        self.test_user = User.objects.create_user(username='TestUser01', password='P@ssw0rdddd')
+        self.endate = datetime.date(2021,6,10)
+        self.url = 'https://www.w3schools.com/python/'
+        self.dcript = 'Python can be used on a server to create web applications.'
+        self.myresource = Resource.objects.create(resourcename = 'Python Tutorial', resourcetype = 'Tutorial', resourceurl = self.url, 
+                                   entereddate = self.endate, user = self.test_user, description = self.dcript)
+        
+    def test_redirect_if_not_logged_in(self):
+        response = self.client.get(reverse('newResource')) 
+        self.assertRedirects(response, '/accounts/login/?next=/Club/newResource/')
+      
+class New_Meeting_Auth_test(TestCase):
+    def setUp(self):
+        #self.test_user = User.objects.create_user(username='TestUser01', password='P@ssw0rdddd')
+        self.mtdate = datetime.date(2021,6,2)
+        self.mttime = datetime.time(12, 30, 00, 240000)
+        self.myMeeting = Meeting.objects.create(meetingtitle = 'Optional IT112 week 10', meetingdate  = self.mtdate, meetingtime = self.mttime, location ='Zoom', Agenda = 'Q&A')
+        
+    def test_redirect_if_not_logged_in(self):
+        response=self.client.get(reverse('newMeeting'))
+        self.assertRedirects(response,'/accounts/login/?next=/Club/newMeeting/')
